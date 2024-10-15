@@ -1,4 +1,7 @@
-export const createTodoAction = (createValue) => (dispatch) => {
+import { refreshTodos } from '../funcs/refreshTodos'
+
+export const createTodoAction = (createValue, refreshFlag) => (dispatch) => {
+  console.log(createValue)
   fetch('http://localhost:3005/todos', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json;charset=utf-8' },
@@ -10,15 +13,7 @@ export const createTodoAction = (createValue) => (dispatch) => {
     }),
   })
     .then((rawResponse) => rawResponse.json())
-    // .then(() => {
-    //   refresh(, refreshFlag)
-    // })
-    .finally(() =>
-      //  setIsCreating(false)
-      dispatch({ type: 'SET_IS_CREATING', payload: false })
-    )
-    .finally(() =>
-      // setInputCreateValue('')
-      dispatch({ type: 'SET_INPUT_CREATE_VALUE', payload: '' })
-    )
+    .then(() => refreshTodos(dispatch, refreshFlag))
+    .finally(() => dispatch({ type: 'SET_IS_CREATING', payload: false }))
+    .finally(() => dispatch({ type: 'SET_INPUT_CREATE_VALUE', payload: '' }))
 }

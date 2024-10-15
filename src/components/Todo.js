@@ -3,44 +3,36 @@ import styles from '../css/todolist.module.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateTodoAction } from '../actions/upadateTodoAction'
 import { deleteTodoAction } from '../actions/deleteTodoAction'
-import { refreshTodos } from '../funcs/refreshTodos'
 import { isUpdatingSelector } from '../selectors/flags/isUpdating-selector'
 import { editingIdSelector } from '../selectors/editingId-selector'
 import { isDeletingSelector } from '../selectors/flags/isDeleting-selector'
-import { currentTodoSelector } from '../selectors/todos/currentTodo-selector'
 import { updateValueSelector } from '../selectors/inputs/updateValue-selector'
 import { refreshFlagSelector } from '../selectors/flags/refreshFlag-selector'
 
-const Todo = () => {
+const Todo = ({ id, title }) => {
   const inputUpdateValue = useSelector(updateValueSelector)
   const isDeleting = useSelector(isDeletingSelector)
   const isUpdating = useSelector(isUpdatingSelector)
   const editingTodoId = useSelector(editingIdSelector)
-  const currentTodo = useSelector(currentTodoSelector)
-  // const refreshFlag = useSelector(refreshFlagSelector)
+  const refreshFlag = useSelector(refreshFlagSelector)
 
-  const { id, title } = currentTodo
   const dispatch = useDispatch()
 
   const updateTodo = (id) => {
-    // setIsUpdating(true)
     dispatch({ type: 'SET_IS_UPDATING', payload: true })
-    updateTodoAction(id, inputUpdateValue)
+    dispatch(updateTodoAction(id, inputUpdateValue, refreshFlag))
   }
 
   const deleteTodo = (id) => {
-    // setIsDeleting(true)
     dispatch({ type: 'SET_IS_DELETING', payload: true })
-    deleteTodoAction(id)
+    dispatch(deleteTodoAction(id, refreshFlag))
   }
 
   const startEditingTodo = (id, title) => {
-    // setEditingTodoId(id)
     dispatch({
       type: 'SET_EDITING_TODO_ID',
       payload: id,
     })
-    // setInputUpdateValue(title)
     dispatch({
       type: 'SET_INPUT_UPDATE_VALUE',
       payload: title,
@@ -48,7 +40,7 @@ const Todo = () => {
   }
 
   return (
-    <div className={styles.todo} key={id}>
+    <div className={styles.todo}>
       {editingTodoId === id ? (
         <form
           onSubmit={(e) => {
@@ -60,9 +52,8 @@ const Todo = () => {
             placeholder='Поменяйте дело...'
             value={inputUpdateValue}
             onChange={({ target }) => {
-              // setInputUpdateValue(target.value)
               dispatch({
-                type: 'SET_INPUTE_UPDATE_VALUE',
+                type: 'SET_INPUT_UPDATE_VALUE',
                 payload: target.value,
               })
             }}
@@ -72,7 +63,7 @@ const Todo = () => {
           </button>
         </form>
       ) : (
-        title
+        <span className={styles['todo-title']}>{title}</span>
       )}
       <div>
         <button

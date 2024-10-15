@@ -1,13 +1,12 @@
-export const deleteTodoAction = (id) => (dispatch) => {
+import { refreshTodos } from '../funcs/refreshTodos'
+
+export const deleteTodoAction = (id, refreshFlag) => (dispatch) => {
   fetch(`http://localhost:3005/todos/${id}`, {
     method: 'DELETE',
   })
     .then((rawResponse) => rawResponse.json())
-    // .then(() => {
-    // refresh(dispatch, refreshFlag)
-    // })
-    .finally(() =>
-      //  setIsDeleting(false)
-      dispatch({ type: 'SET_IS_DELETING', payload: false })
-    )
+    .then(() => {
+      refreshTodos(dispatch, refreshFlag)
+    })
+    .finally(() => dispatch({ type: 'SET_IS_DELETING', payload: false }))
 }

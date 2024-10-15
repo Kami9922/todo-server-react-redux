@@ -1,4 +1,8 @@
-export const initialState = {}
+export const initialState = {
+  inputCreateValue: '',
+  inputUpdateValue: '',
+  inputSearchValue: '',
+}
 
 export const inputsReducer = (state = initialState, { type, payload }) => {
   switch (type) {
@@ -12,7 +16,7 @@ export const inputsReducer = (state = initialState, { type, payload }) => {
         ...state,
         inputUpdateValue: payload,
       }
-    case 'SET_INPUTE_SEARCH_VALUE':
+    case 'SET_INPUT_SEARCH_VALUE':
       return {
         ...state,
         inputSearchValue: payload,
